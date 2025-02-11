@@ -12,8 +12,7 @@ globalBookmarkElement.appendChild(globalBookmarkClone);
 
 /********************
  * CONFIGURATION & STATE *
- ********************/
-let currentLanguage = 'en';
+ let currentLanguage = 'en';
 let currentLanguageDisplay = 'ENG';
 const languages = [
   { code: 'en', display: 'ENG', name: 'English' },
@@ -30,6 +29,8 @@ const languages = [
   { code: 'zh', display: 'CHI', name: '中文' },
   { code: 'ja', display: 'JPN', name: '日本語' }
 ];
+ ********************/
+
 
 
 const mechanicsKeywords = [
