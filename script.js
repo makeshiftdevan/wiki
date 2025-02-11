@@ -8,11 +8,6 @@ globalBookmarkClone.setAttribute("height", "24");
 globalBookmarkElement.appendChild(globalBookmarkClone);
 
 
-async function ensureArticlePool(minCount = 300) {
-  while (articleCache.length < minCount) {
-    await preloadArticles();
-  }
-}
 
 
 /********************
