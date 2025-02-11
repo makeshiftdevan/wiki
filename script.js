@@ -7,6 +7,14 @@ globalBookmarkClone.setAttribute("width", "24");
 globalBookmarkClone.setAttribute("height", "24");
 globalBookmarkElement.appendChild(globalBookmarkClone);
 
+
+async function ensureArticlePool(minCount = 300) {
+  while (articleCache.length < minCount) {
+    await preloadArticles();
+  }
+}
+
+
 /********************
  * CONFIGURATION & STATE *
  ********************/
@@ -28,6 +36,272 @@ const languages = [
   { code: 'ja', display: 'JPN', name: '日本語' }
 ];
 
+
+const mechanicsKeywords = [
+  "mechanics",
+  "classical mechanics",
+  "kinematics",
+  "dynamics",
+  "Newton",
+  "force",
+  "momentum",
+  "energy",
+  "rotation",
+  "vibrations",
+  "displacement",
+  "velocity",
+  "acceleration",
+  "position",
+  "kinematic equations",
+  "scalar quantity",
+  "vector quantity",
+  "free fall",
+  "uniform motion",
+  "uniformly accelerated motion",
+  "instantaneous velocity",
+  "average velocity",
+  "uniform circular motion",
+  "centripetal acceleration",
+  "centripetal force",
+  "Newton's first law",
+  "inertia",
+  "mass",
+  "Newton's second law",
+  "gravitational force",
+  "weight",
+  "gravitational field",
+  "Newton's third law",
+  "action-reaction pairs",
+  "friction",
+  "static friction",
+  "kinetic friction",
+  "coefficient of friction",
+  "applied force",
+  "tension",
+  "normal force",
+  "drag force",
+  "thrust",
+  "net force",
+  "uniform motion in one dimension",
+  "projectile motion",
+  "horizontal projectile",
+  "vertical projectile",
+  "trajectory",
+  "parabolic motion",
+  "acceleration due to gravity",
+  "acceleration vector",
+  "air resistance",
+  "motion in two dimensions",
+  "velocity vector",
+  "acceleration vector",
+  "conservation of momentum",
+  "impulse",
+  "impulse-momentum theorem",
+  "elastic collision",
+  "inelastic collision",
+  "perfectly inelastic collision",
+  "conservation of energy",
+  "work",
+  "work-energy theorem",
+  "kinetic energy",
+  "potential energy",
+  "gravitational potential energy",
+  "spring potential energy",
+  "elastic potential energy",
+  "conservative force",
+  "non-conservative force",
+  "work done by a force",
+  "power",
+  "power equation",
+  "efficiency",
+  "rotational motion",
+  "angular velocity",
+  "angular acceleration",
+  "torque",
+  "moment of inertia",
+  "rotational inertia",
+  "rotational kinetic energy",
+  "angular momentum",
+  "conservation of angular momentum",
+  "rotational analog of Newton's second law",
+  "torque equation",
+  "angular impulse",
+  "center of mass",
+  "center of gravity",
+  "moment of force",
+  "parallel axis theorem",
+  "rolling motion",
+  "angular displacement",
+  "angular velocity equation",
+  "angular acceleration equation",
+  "mass moment of inertia",
+  "rigid body",
+  "non-rigid body",
+  "simple harmonic motion",
+  "period of oscillation",
+  "frequency of oscillation",
+  "amplitude",
+  "restoring force",
+  "mass-spring system",
+  "pendulum motion",
+  "harmonic oscillator",
+  "damped oscillations",
+  "forced oscillations",
+  "resonance",
+  "restoring force law",
+  "angular frequency",
+  "energy in simple harmonic motion",
+  "spring constant",
+  "moment of inertia of a disk",
+  "moment of inertia of a hoop",
+  "moment of inertia of a rod",
+  "moment of inertia of a solid sphere",
+  "moment of inertia of a spherical shell",
+  "energy conservation in rotational motion",
+  "energy of an oscillating system",
+  "equilibrium position",
+  "restoring force in a pendulum",
+  "elasticity",
+  "Hooke's law",
+  "stress",
+  "strain",
+  "Young's modulus",
+  "bulk modulus",
+  "shear modulus",
+  "wave amplitude",
+  "wave frequency",
+  "velocity of wave propagation",
+  "simple harmonic oscillator energy",
+  "pendulum energy",
+  "frequency of oscillation for a spring",
+  "frequency of oscillation for a pendulum",
+  "force constant",
+  "equilibrium in harmonic motion",
+  "phase constant",
+  "period for a spring",
+  "period for a pendulum",
+  "angular frequency of oscillation",
+  "wave interference",
+  "constructive interference",
+  "destructive interference",
+  "standing waves",
+  "node",
+  "antinode",
+  "harmonics",
+  "elastic collisions in 1D",
+  "elastic collisions in 2D",
+  "conservation of mechanical energy",
+  "momentum conservation in systems of particles",
+  "momentum conservation in collisions",
+  "work done by gravity",
+  "centripetal force equation",
+  "linear momentum",
+  "impulse and momentum",
+  "angular momentum conservation",
+  "moment of inertia of a uniform ring",
+  "torque and angular momentum",
+  "kinetic energy and work relation",
+  "conservation of linear momentum",
+  "momentum conservation in collisions",
+  "rigid body rotation",
+  "angular velocity relationships",
+  "angular acceleration equations",
+  "displacement-time graph",
+  "velocity-time graph",
+  "acceleration-time graph",
+  "inclined plane",
+  "force diagrams",
+  "elastic collision equations",
+  "non-elastic collision equations",
+  "frictional force calculation",
+  "angular momentum of a rigid body",
+  "work and energy principles",
+  "power and energy transformations",
+  "centripetal acceleration in circular motion",
+  "angular velocity vector",
+  "centripetal force in circular motion",
+  "uniform circular motion equations",
+  "radial acceleration",
+  "angular acceleration",
+  "rigid body dynamics",
+  "kinetic energy in rotational motion",
+  "torque as a rotational force",
+  "work done by rotational force",
+  "angular velocity in rotational dynamics",
+  "linear velocity and angular velocity relationship",
+  "momentum conservation in rotational motion",
+  "angular impulse",
+  "angular kinetic energy",
+  "tangential velocity",
+  "equation for torque",
+  "moment of inertia in rotational motion",
+  "torque and rotational motion relationship",
+  "centripetal force in planetary motion",
+  "momentum conservation in angular systems",
+  "motion on an incline",
+  "motion with friction",
+  "centripetal force in a conical pendulum",
+  "spring force",
+  "force of tension in circular motion",
+  "contact forces",
+  "force of gravity",
+  "work-energy theorem in rotational motion",
+  "kinetic energy of rotating objects",
+  "mass-spring system analysis",
+  "conservation of mechanical energy in oscillations",
+  "simple harmonic oscillator force",
+  "frictionless motion",
+  "applied force and work",
+  "equilibrium of forces",
+  "force of a moving object",
+  "kinematic analysis",
+  "circular motion",
+  "rolling without slipping",
+  "momentum transfer",
+  "dynamics of rigid bodies",
+  "non-inertial reference frames",
+  "equations of motion in rotational dynamics",
+  "power in rotational motion",
+  "angular displacement",
+  "angular velocity",
+  "angular acceleration in rotational dynamics",
+  "rotational energy in systems",
+  "force of gravity on a body",
+  "conservation of energy in a system of particles",
+  "Newton's law of gravitation",
+  "gravitational field",
+  "potential energy in systems",
+  "uniform motion in a circle",
+  "angular velocity in systems",
+  "centripetal force and radius relationship",
+  "equilibrium in mechanical systems",
+  "force due to gravity in circular motion",
+  "torque calculation in rotational dynamics",
+  "force in a pulley system",
+  "angular acceleration in rotational systems",
+  "momentum and kinetic energy",
+  "force on a moving particle",
+  "collision dynamics",
+  "dynamic friction",
+  "oscillation frequency",
+  "translational kinetic energy",
+  "mass and rotational inertia",
+  "force of a rotating disk",
+  "conservation of energy in a spring system",
+  "simple harmonic oscillators",
+  "angular momentum in a system",
+  "rotational work",
+  "torque and its effect on angular momentum",
+  "radial force in planetary systems",
+  "centripetal force in non-uniform circular motion"
+];
+
+  
+];
+
+function getRandomKeyword() {
+  return mechanicsKeywords[Math.floor(Math.random() * mechanicsKeywords.length)];
+}
 /********************
  * ARTICLE CACHING *
  ********************/
@@ -36,11 +310,19 @@ let isPreloading = false;
 const CACHE_THRESHOLD = 5;
 const BULK_FETCH_COUNT = 10;  // Number of articles to fetch at a time
 
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+
 // Fetch mechanics-related articles
 async function preloadArticles() {
   if (isPreloading) return;
   isPreloading = true;
-  const searchTerm = "classical mechanics"; // Adjust the search term as needed
+  const searchTerm = getRandomKeyword(); // Use a random keyword
   const url = `https://${currentLanguage}.wikipedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=${encodeURIComponent(searchTerm)}&gsrlimit=${BULK_FETCH_COUNT}&prop=extracts|pageimages|info&inprop=url&exintro=1&explaintext=1&piprop=thumbnail&pithumbsize=400&origin=*`;
   try {
     const response = await fetch(url);
@@ -49,12 +331,15 @@ async function preloadArticles() {
       const articles = Object.values(json.query.pages);
       const validArticles = articles.filter(article => article.thumbnail && article.thumbnail.source);
       validArticles.forEach(article => articleCache.push(article));
+      // Shuffle the pool for randomness
+      shuffleArray(articleCache);
     }
   } catch (error) {
     console.error("Error fetching mechanics articles:", error);
   }
   isPreloading = false;
 }
+
 
 // Fetch a specific article by its pageid
 async function fetchArticleById(pageId) {
