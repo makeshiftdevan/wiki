@@ -56,14 +56,15 @@ h2 {
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
+  touch-action: pan-y;  /* This tells the browser to handle vertical panning naturally */
   scrollbar-width: none;        /* Firefox */
-  -ms-overflow-style: none;     /* Internet Explorer 10+ */
+  -ms-overflow-style: none;     /* IE 10+ */
 }
 
-/* For Chrome, Safari, and Opera */
 #container::-webkit-scrollbar {
-  display: none;
+  display: none;  /* Chrome, Safari, Opera */
 }
+
 
 /* Each article section */
 .article {
