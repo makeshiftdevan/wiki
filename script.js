@@ -530,15 +530,6 @@ async function addArticle() {
   }
 }
 
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      observer.unobserve(entry.target); // Unobserve to prevent multiple triggers
-      addArticle(); // Trigger loading of the next article
-    }
-  });
-}, observerOptions);
-
 
 // Handle URL path for specific article pageid
 const path = window.location.pathname.replace(/\//g, "");
