@@ -10,29 +10,6 @@ globalBookmarkElement.appendChild(globalBookmarkClone);
 
 
 
-/********************
- * CONFIGURATION & STATE *
- let currentLanguage = 'en';
-let currentLanguageDisplay = 'ENG';
-const languages = [
-  { code: 'en', display: 'ENG', name: 'English' },
-  { code: 'es', display: 'ESP', name: 'Español' },
-  { code: 'de', display: 'DEU', name: 'Deutsch' },
-  { code: 'fr', display: 'FRA', name: 'Français' },
-  { code: 'it', display: 'ITA', name: 'Italiano' },
-  { code: 'nl', display: 'NLD', name: 'Dutch' },
-  { code: 'pl', display: 'POL', name: 'Polish' },
-  { code: 'pt', display: 'POR', name: 'Português' },
-  { code: 'ru', display: 'RUS', name: 'Русский' },
-  { code: 'sv', display: 'SWE', name: 'Svenska' },
-  { code: 'ko', display: 'KOR', name: '한국어' },
-  { code: 'zh', display: 'CHI', name: '中文' },
-  { code: 'ja', display: 'JPN', name: '日本語' }
-];
- ********************/
-
-
-
 const mechanicsKeywords = [
   "mechanics",
   "classical mechanics",
@@ -291,12 +268,10 @@ const mechanicsKeywords = [
   "radial force in planetary systems",
   "centripetal force in non-uniform circular motion"
 ];
-
-  
-
 function getRandomKeyword() {
   return mechanicsKeywords[Math.floor(Math.random() * mechanicsKeywords.length)];
 }
+
 /********************
  * ARTICLE CACHING *
  ********************/
@@ -311,7 +286,6 @@ function shuffleArray(array) {
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
-
 
 // Fetch mechanics-related articles
 async function preloadArticles() {
@@ -334,8 +308,6 @@ async function preloadArticles() {
   }
   isPreloading = false;
 }
-
-
 
 // Fetch a specific article by its pageid
 async function fetchArticleById(pageId) {
@@ -587,164 +559,38 @@ const bookmarkList = document.getElementById('bookmark-list');
 const bookmarkSearch = document.getElementById('bookmark-search');
 
 globalBookmark.addEventListener('click', () => {
-  populateBookmarks();
   bookmarkModal.style.display = 'block';
+  const storedBookmarks = JSON.parse(localStorage.getItem("bookmarkedArticles") || "[]");
+  bookmarkList.innerHTML = '';
+  storedBookmarks.forEach(bookmark => {
+    const listItem = document.createElement('li');
+    listItem.classList.add('bookmark-item');
+    const titleLink = document.createElement('a');
+    titleLink.textContent = bookmark.title;
+    titleLink.href = bookmark.url;
+    titleLink.target = '_blank';
+    listItem.appendChild(titleLink);
+    const removeButton = document.createElement('button');
+    removeButton.textContent = "Remove";
+    removeButton.classList.add('remove-bookmark');
+    removeButton.addEventListener('click', () => {
+      removeBookmark(bookmark);
+      bookmarkList.removeChild(listItem);
+    });
+    listItem.appendChild(removeButton);
+    bookmarkList.appendChild(listItem);
+  });
 });
 
 modalClose.addEventListener('click', () => {
   bookmarkModal.style.display = 'none';
 });
 
-window.addEventListener('click', (event) => {
-  if (event.target === bookmarkModal) {
-    bookmarkModal.style.display = 'none';
-  }
-});
-
-bookmarkSearch.addEventListener('input', populateBookmarks);
-
-// Levenshtein distance for fuzzy matching
-function levenshtein(a, b) {
-  const matrix = [];
-  const aLen = a.length;
-  const bLen = b.length;
-  for (let i = 0; i <= aLen; i++) {
-    matrix[i] = [i];
-  }
-  for (let j = 0; j <= bLen; j++) {
-    matrix[0][j] = j;
-  }
-  for (let i = 1; i <= aLen; i++) {
-    for (let j = 1; j <= bLen; j++) {
-      if (a.charAt(i - 1) === b.charAt(j - 1)) {
-        matrix[i][j] = matrix[i - 1][j - 1];
-      } else {
-        matrix[i][j] = Math.min(
-          matrix[i - 1][j - 1] + 1,
-          Math.min(matrix[i][j - 1] + 1, matrix[i - 1][j] + 1)
-        );
-      }
-    }
-  }
-  return matrix[aLen][bLen];
-}
-
-function fuzzyMatch(text, query) {
-  text = text.toLowerCase();
-  query = query.toLowerCase();
-  if (query === "") return true;
-  if (text.includes(query)) return true;
-  let threshold = Math.max(1, Math.floor(text.length * 0.3));
-  let dist = levenshtein(text, query);
-  return dist <= threshold;
-}
-
-function populateBookmarks() {
-  bookmarkList.innerHTML = '';
-  const bookmarks = JSON.parse(localStorage.getItem("bookmarkedArticles") || "[]");
-  const query = bookmarkSearch.value.trim();
-  const filtered = bookmarks.filter(item => fuzzyMatch(item.title, query));
-  if (filtered.length === 0) {
-    bookmarkList.innerHTML = '<p>No bookmarks match your search.</p>';
-    return;
-  }
-  filtered.forEach(item => {
-    const itemLink = document.createElement('a');
-    itemLink.classList.add('bookmark-item');
-    itemLink.href = item.url;
-    itemLink.target = '_blank';
-    if (item.image) {
-      const imgContainer = document.createElement('div');
-      imgContainer.classList.add('bookmark-img-container');
-      const img = document.createElement('img');
-      img.src = item.image;
-      img.alt = item.title;
-      imgContainer.appendChild(img);
-      itemLink.appendChild(imgContainer);
-    }
-    const textContainer = document.createElement('div');
-    const itemTitle = document.createElement('h3');
-    itemTitle.textContent = item.title;
-    const itemSummary = document.createElement('p');
-    itemSummary.textContent = item.summary;
-    textContainer.appendChild(itemTitle);
-    textContainer.appendChild(itemSummary);
-    itemLink.appendChild(textContainer);
-    const removeIcon = document.createElement('span');
-    removeIcon.classList.add('remove-bookmark');
-    removeIcon.textContent = "✖";
-    removeIcon.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      removeBookmark(item);
-      populateBookmarks();
-    });
-    itemLink.appendChild(removeIcon);
-    bookmarkList.appendChild(itemLink);
+bookmarkSearch.addEventListener('input', () => {
+  const searchTerm = bookmarkSearch.value.toLowerCase();
+  const items = document.querySelectorAll('.bookmark-item');
+  items.forEach(item => {
+    const title = item.querySelector('a').textContent.toLowerCase();
+    item.style.display = title.includes(searchTerm) ? 'block' : 'none';
   });
-}
-
-/***************************
- * LANGUAGE SELECTOR HANDLING *
-
- const globalLanguage = document.getElementById('global-language');
-const languageDropdown = document.getElementById('language-dropdown');
-const currentLangSpan = document.getElementById('current-lang');
-
-function populateLanguageDropdown() {
-  languageDropdown.innerHTML = '';
-  languages.forEach(lang => {
-    const option = document.createElement('div');
-    option.classList.add('language-option');
-    option.textContent = lang.name + " (" + lang.display + ")";
-    option.dataset.code = lang.code;
-    option.dataset.display = lang.display;
-    option.addEventListener('click', () => {
-      document.getElementById('loader').style.display = 'flex';
-      currentLanguage = option.dataset.code;
-      currentLanguageDisplay = option.dataset.display;
-      currentLangSpan.textContent = currentLanguageDisplay;
-      languageDropdown.style.display = 'none';
-      document.getElementById('container').innerHTML = '';
-      articleCache.length = 0;
-      preloadArticles().then(() => {
-        addArticle();
-        addArticle();
-        document.getElementById('loader').style.display = 'none';
-      });
-    });
-    languageDropdown.appendChild(option);
-  });
-}
-
-populateLanguageDropdown();
-
-globalLanguage.addEventListener('click', (e) => {
-  e.stopPropagation();
-  if (languageDropdown.style.display === 'block') {
-    languageDropdown.style.display = 'none';
-  } else {
-    languageDropdown.style.display = 'block';
-  }
 });
-
-window.addEventListener('click', (e) => {
-  if (languageDropdown.style.display === 'block') {
-    languageDropdown.style.display = 'none';
-  }
- ***************************/
-
-});
-
-function showToast(message) {
-  const toast = document.createElement('div');
-  toast.classList.add('toast');
-  toast.textContent = message;
-  document.body.appendChild(toast);
-  setTimeout(() => {
-    toast.style.opacity = '0';
-    setTimeout(() => {
-      document.body.removeChild(toast);
-    }, 500);
-  }, 3000);
-}
