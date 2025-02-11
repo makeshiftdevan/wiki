@@ -422,12 +422,7 @@ function createArticleSection(article) {
     overlay.appendChild(link);
   }
 
-  section.appendChild(dimmer);
-  section.appendChild(overlay);
-  return section;
-}
-
-
+  // Moved the following block inside the function:
   const iconContainer = document.createElement('div');
   iconContainer.classList.add('icon-container');
   
@@ -492,6 +487,7 @@ function createArticleSection(article) {
   section.appendChild(overlay);
   return section;
 }
+
 
 /***************************
  * SCROLL & OBSERVER *
