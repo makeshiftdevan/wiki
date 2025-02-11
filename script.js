@@ -284,7 +284,7 @@ function getRandomKeyword() {
 const articleCache = [];
 let isPreloading = false;
 const CACHE_THRESHOLD = 10;
-const BULK_FETCH_COUNT = 100;  // Number of articles to fetch at a time
+const BULK_FETCH_COUNT = 50;  // Number of articles to fetch at a time
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -380,10 +380,13 @@ function toggleBookmark(article, bookmarkIcon) {
  * ARTICLE SECTION CREATION *
  ***************************/
 function createArticleSection(article) {
-  if (!article.title.toLowerCase().includes("mechanics") && 
-      !article.extract.toLowerCase().includes("mechanics") &&
-      !(article.description && article.description.toLowerCase().includes("mechanics"))) {
+  if (
+    !(article.title && article.title.toLowerCase().includes("mechanics")) &&
+    !(article.extract && article.extract.toLowerCase().includes("mechanics")) &&
+    !(article.description && article.description.toLowerCase().includes("mechanics"))
+  ) {
     return null;
+  }
   }
   
   const section = document.createElement('section');
