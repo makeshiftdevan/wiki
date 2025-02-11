@@ -113,6 +113,12 @@ h2 {
   display: inline-block;
 }
 
+.text-overlay {
+  background: rgba(0, 0, 0, 0.5); /* dark overlay */
+  color: #fff;
+  padding: 1rem;
+}
+
 /* Article category – small text at the top left of the overlay */
 .article-category {
   position: absolute;
