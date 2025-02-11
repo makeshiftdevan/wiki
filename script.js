@@ -302,8 +302,8 @@ function getRandomKeyword() {
  ********************/
 const articleCache = [];
 let isPreloading = false;
-const CACHE_THRESHOLD = 5;
-const BULK_FETCH_COUNT = 10;  // Number of articles to fetch at a time
+const CACHE_THRESHOLD = 10;
+const BULK_FETCH_COUNT = 100;  // Number of articles to fetch at a time
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -334,6 +334,7 @@ async function preloadArticles() {
   }
   isPreloading = false;
 }
+
 
 
 // Fetch a specific article by its pageid
