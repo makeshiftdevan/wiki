@@ -318,7 +318,7 @@ async function preloadArticles() {
   if (isPreloading) return;
   isPreloading = true;
   const searchTerm = getRandomKeyword(); // Use a random keyword
-  const url = `https://${currentLanguage}.wikipedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=${encodeURIComponent(searchTerm)}&gsrlimit=${BULK_FETCH_COUNT}&prop=extracts|pageimages|info&inprop=url&exintro=1&explaintext=1&piprop=thumbnail&pithumbsize=400&origin=*`;
+  const url = `https://wikipedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=${encodeURIComponent(searchTerm)}&gsrlimit=${BULK_FETCH_COUNT}&prop=extracts|pageimages|info&inprop=url&exintro=1&explaintext=1&piprop=thumbnail&pithumbsize=400&origin=*`;
   try {
     const response = await fetch(url);
     const json = await response.json();
@@ -339,7 +339,7 @@ async function preloadArticles() {
 
 // Fetch a specific article by its pageid
 async function fetchArticleById(pageId) {
-  const url = `https://${currentLanguage}.wikipedia.org/w/api.php?action=query&format=json&pageids=${pageId}&prop=extracts|pageimages|info&inprop=url&exintro=1&explaintext=1&piprop=thumbnail&pithumbsize=400&origin=*`;
+  const url = `https://wikipedia.org/w/api.php?action=query&format=json&pageids=${pageId}&prop=extracts|pageimages|info&inprop=url&exintro=1&explaintext=1&piprop=thumbnail&pithumbsize=400&origin=*`;
   try {
     const response = await fetch(url);
     const json = await response.json();
@@ -686,8 +686,8 @@ function populateBookmarks() {
 
 /***************************
  * LANGUAGE SELECTOR HANDLING *
- ***************************/
-const globalLanguage = document.getElementById('global-language');
+
+ const globalLanguage = document.getElementById('global-language');
 const languageDropdown = document.getElementById('language-dropdown');
 const currentLangSpan = document.getElementById('current-lang');
 
@@ -732,6 +732,8 @@ window.addEventListener('click', (e) => {
   if (languageDropdown.style.display === 'block') {
     languageDropdown.style.display = 'none';
   }
+ ***************************/
+
 });
 
 function showToast(message) {
