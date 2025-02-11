@@ -295,6 +295,7 @@ function shuffleArray(array) {
 
 // Fetch mechanics-related articles
 async function preloadArticles() {
+  console.log("Preloading articles...");
   if (isPreloading) return;
   isPreloading = true;
   const searchTerm = getRandomKeyword(); // Use a random keyword
@@ -308,6 +309,7 @@ async function preloadArticles() {
       validArticles.forEach(article => articleCache.push(article));
       // Shuffle the pool for randomness
       shuffleArray(articleCache);
+      
     }
   } catch (error) {
     console.error("Error fetching mechanics articles:", error);
@@ -510,20 +512,33 @@ const observer = new IntersectionObserver((entries) => {
 }, observerOptions);
 
 async function addArticle() {
+  console.log("Adding article...");
   if (articleCache.length === 0) {
-    await preloadArticles();
+    await preloadArticles(); // Preload if the cache is empty
   }
   const articleData = articleCache.shift();
   if (!articleData) return;
-  const section = createArticleSection(articleData);
+  
+  const section = createArticleSection(articleData); 
   if (section) {
     container.appendChild(section);
-    observer.observe(section);
+    observer.observe(section); // Reobserve the newly added section
   }
+  
   if (articleCache.length <= CACHE_THRESHOLD) {
-    preloadArticles();
+    preloadArticles(); // Preload articles when the cache is low
   }
 }
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      observer.unobserve(entry.target); // Unobserve to prevent multiple triggers
+      addArticle(); // Trigger loading of the next article
+    }
+  });
+}, observerOptions);
+
 
 // Handle URL path for specific article pageid
 const path = window.location.pathname.replace(/\//g, "");
