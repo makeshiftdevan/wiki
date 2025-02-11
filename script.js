@@ -292,7 +292,6 @@ const mechanicsKeywords = [
 ];
 
   
-];
 
 function getRandomKeyword() {
   return mechanicsKeywords[Math.floor(Math.random() * mechanicsKeywords.length)];
