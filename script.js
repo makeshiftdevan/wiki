@@ -422,7 +422,7 @@ function createArticleSection(article) {
     overlay.appendChild(link);
   }
 
-  // Moved the following block inside the function:
+  // The following block is moved inside the function.
   const iconContainer = document.createElement('div');
   iconContainer.classList.add('icon-container');
   
@@ -485,8 +485,10 @@ function createArticleSection(article) {
   overlay.appendChild(iconContainer);
   section.appendChild(dimmer);
   section.appendChild(overlay);
-  return section;
+
+  return section; // This return is inside the function now.
 }
+
 
 
 /***************************
