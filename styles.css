@@ -1,389 +1,341 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WikiTok - Mechanics Edition</title>
-  <meta name="description" content="A TikTok style feed for Mechanics (Physics) articles from Wikipedia">
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <style>
-    /* Global styles with dark background */
-    html, body {
-      width: 100%;
-      height: 100vh;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-    }
+/* Global styles with dark background */
+html, body {
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
 
-    #fullPageContainer {
-      width: 100%;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+#fullPageContainer {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-    h2 {
-      margin-top: 0;
-    }
+h2 {
+  margin-top: 0;
+}
 
-    /* Loader styles */
-    #loader {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #222;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 2000;
-      color: white;
-      font-size: 20px;
-    }
-    .spinner {
-      border: 8px solid #444;
-      border-top: 8px solid #fff;
-      border-radius: 50%;
-      width: 60px;
-      height: 60px;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
+/* Loader styles */
+#loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #222;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  color: white;
+  font-size: 20px;
+}
 
-    /* Container for articles */
-    #container {
-      height: 100vh;
-      overflow-y: scroll;
-      scroll-snap-type: y mandatory;
-      scroll-behavior: smooth;
-    }
+.spinner {
+  border: 8px solid #444;
+  border-top: 8px solid #fff;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+}
 
-    /* Each article section */
-    .article {
-      scroll-snap-align: start;
-      height: 100vh;
-      position: relative;
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-    }
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 
-    /* Article overlay at bottom */
-    .overlay {
-      position: absolute;
-      bottom: 10vh;
-      left: 0;
-      right: 0;
-      color: #fff;
-      padding: 20px;
-      box-sizing: border-box;
-    }
+/* Container for articles */
+#container {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
 
-    .overlay .article-title {
-      margin: 0 0 10px;
-      font-size: 1.4em;
-      padding-top: 2px;
-      width: calc(100% - 90px);
-      color: #fff;
-      font-weight: bold;
-    }
+/* Each article section */
+.article {
+  scroll-snap-align: start;
+  height: 100vh;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
 
-    .overlay p {
-      margin: 0;
-      line-height: 1.6;
-      overflow: hidden;
-      max-height: 130px;
-      display: -webkit-box;
-      -webkit-line-clamp: 5;
-      -webkit-box-orient: vertical;
-    }
+/* Article overlay at bottom */
+.overlay {
+  position: absolute;
+  bottom: 10vh;
+  left: 0;
+  right: 0;
+  color: #fff;
+  padding: 20px;
+  box-sizing: border-box;
+}
 
-    .overlay a {
-      color: #ffd700;
-      text-decoration: none;
-      margin-top: 10px;
-      display: inline-block;
-    }
+.overlay .article-title {
+  margin: 0 0 10px;
+  font-size: 1.4em;
+  padding-top: 2px;
+  width: calc(100% - 90px);
+  color: #fff;
+  font-weight: bold;
+}
 
-    /* Article category – small text at the top left of the overlay */
-    .article-category {
-      position: absolute;
-      top: 5px;
-      left: 5px;
-      font-size: 12px;
-      color: #fff;
-      background-color: rgba(0, 0, 0, 0.5);
-      padding: 2px 4px;
-      border-radius: 3px;
-    }
+.overlay p {
+  margin: 0;
+  line-height: 1.6;
+  overflow: hidden;
+  max-height: 130px;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+}
 
-    /* Icon container in overlay (top right) */
-    .icon-container {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      display: flex;
-      gap: 10px;
-    }
+.overlay a {
+  color: #ffd700;
+  text-decoration: none;
+  margin-top: 10px;
+  display: inline-block;
+}
 
-    .icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background-color: rgba(0,0,0,0.8);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      flex-shrink: 0;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-    }
+/* Article category – small text at the top left of the overlay */
+.article-category {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  font-size: 12px;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 2px 4px;
+  border-radius: 3px;
+}
 
-    .icon svg {
-      user-select: none;
-    }
+/* Icon container in overlay (top right) */
+.icon-container {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  display: flex;
+  gap: 10px;
+}
 
-    /* Share icon styling */
-    .share.icon svg {
-      width: 26px;
-      height: 26px;
-    }
+.icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
 
-    /* Global icons container */
-    #global-icons-container {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      display: flex;
-      gap: 10px;
-      z-index: 1000;
-    }
+.icon svg {
+  user-select: none;
+}
 
-    .global-bookmark {
-      width: 40px;
-      height: 40px;
-      background-color: black;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
+/* Share icon styling */
+.share.icon svg {
+  width: 26px;
+  height: 26px;
+}
 
-    .global-bookmark svg {
-      width: 24px;
-      height: 24px;
-    }
+/* Global icons container */
+#global-icons-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+  z-index: 1000;
+}
 
-    .global-language {
-      display: flex;
-      align-items: center;
-      background-color: black;
-      color: white;
-      padding: 3px 8px;
-      border-radius: 20px;
-      font-size: 14px;
-      cursor: pointer;
-      height: 32px;
-    }
+.global-bookmark {
+  width: 40px;
+  height: 40px;
+  background-color: black;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
 
-    .global-language svg {
-      width: 14px;
-      height: 14px;
-      margin-right: 4px;
-      fill: white;
-    }
+.global-bookmark svg {
+  width: 24px;
+  height: 24px;
+}
 
-    /* Language Dropdown */
-    .language-dropdown {
-      position: fixed;
-      top: 70px;
-      right: 20px;
-      background-color: black;
-      border: 1px solid #444;
-      border-radius: 5px;
-      z-index: 1000;
-      display: none;
-      min-width: 120px;
-    }
+.global-language {
+  display: flex;
+  align-items: center;
+  background-color: black;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  height: 32px;
+}
 
-    .language-option {
-      padding: 8px 12px;
-      cursor: pointer;
-      color: white;
-    }
+.global-language svg {
+  width: 14px;
+  height: 14px;
+  margin-right: 4px;
+  fill: white;
+}
 
-    .language-option:hover {
-      background-color: #333;
-    }
+/* Language Dropdown */
+.language-dropdown {
+  position: fixed;
+  top: 70px;
+  right: 20px;
+  background-color: black;
+  border: 1px solid #444;
+  border-radius: 5px;
+  z-index: 1000;
+  display: none;
+  min-width: 120px;
+}
 
-    /* Modal styling */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1001;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0, 0, 0, 0.7);
-    }
+.language-option {
+  padding: 8px 12px;
+  cursor: pointer;
+  color: white;
+}
 
-    .modal-content {
-      background-color: #222;
-      color: #fff;
-      margin: 5% auto;
-      padding: 20px 15px;
-      border: 1px solid #444;
-      width: 80%;
-      max-height: 80%;
-      overflow-y: auto;
-      position: relative;
-    }
+.language-option:hover {
+  background-color: #333;
+}
 
-    .modal-close {
-      color: #aaa;
-      position: absolute;
-      top: 5px;
-      right: 10px;
-      font-size: 28px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+/* Modal styling */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1001;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.7);
+}
 
-    .modal-close:hover,
-    .modal-close:focus {
-      color: #fff;
-      text-decoration: none;
-    }
+.modal-content {
+  background-color: #222;
+  color: #fff;
+  margin: 5% auto;
+  padding: 20px 15px;
+  border: 1px solid #444;
+  width: 80%;
+  max-height: 80%;
+  overflow-y: auto;
+  position: relative;
+}
 
-    /* Search input in modal */
-    #bookmark-search {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-      font-size: 16px;
-      border: 1px solid #444;
-      background-color: #333;
-      color: #fff;
-      box-sizing: border-box;
-    }
+.modal-close {
+  color: #aaa;
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
 
-    /* Bookmark modal item styles */
-    .bookmark-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 15px;
-      border-bottom: 1px solid #444;
-      padding: 10px 5px;
-      text-decoration: none;
-      color: inherit;
-      position: relative;
-    }
+.modal-close:hover,
+.modal-close:focus {
+  color: #fff;
+  text-decoration: none;
+}
 
-    .bookmark-item img {
-      object-fit: cover;
-      width: 100%;
-      height: 100%;
-    }
+/* Search input in modal */
+#bookmark-search {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  border: 1px solid #444;
+  background-color: #333;
+  color: #fff;
+  box-sizing: border-box;
+}
 
-    .bookmark-item h3 {
-      margin: 0;
-      font-size: 1.2em;
-    }
+/* Bookmark modal item styles */
+.bookmark-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #444;
+  padding: 10px 5px;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+}
 
-    .bookmark-item p {
-      margin: 5px 0 0 0;
-      font-size: 0.9em;
-      color: #ccc;
-      display: -webkit-box;
-      -webkit-line-clamp: 4;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
+.bookmark-item img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
 
-    .bookmark-img-container {
-      width: 80px;
-      height: 80px;
-      flex-shrink: 0;
-      margin-right: 15px;
-      overflow: hidden;
-      max-width: 25%;
-      max-height: 25%;
-    }
+.bookmark-item h3 {
+  margin: 0;
+  font-size: 1.2em;
+}
 
-    .remove-bookmark {
-      font-size: 18px;
-      color: #f00;
-      margin-left: auto;
-      cursor: pointer;
-      position: relative;
-      right: -5px;
-    }
+.bookmark-item p {
+  margin: 5px 0 0 0;
+  font-size: 0.9em;
+  color: #ccc;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
-    /* Logo styles */
-    #logo {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      font-size: 28px;
-      color: #fff;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-    }
+.bookmark-img-container {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+  margin-right: 15px;
+  overflow: hidden;
+  max-width: 25%;
+  max-height: 25%;
+}
 
-    #logo svg {
-      margin-right: 10px;
-    }
-  </style>
-</head>
-<body>
-  <div id="loader">
-    <div class="spinner"></div>
-    <div>Loading content...</div>
-  </div>
-  <div id="fullPageContainer">
-    <div id="container"></div>
-  </div>
+.remove-bookmark {
+  font-size: 18px;
+  color: #f00;
+  margin-left: auto;
+  cursor: pointer;
+  position: relative;
+  right: -5px;
+}
 
-  <!-- Global Icons -->
-  <div id="global-icons-container">
-    <div class="global-bookmark">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"><path d="M12 4C6.48 4 2 7.98 2 12s4.48 8 10 8 10-3.98 10-8-4.48-8-10-8zm0 14c-3.3 0-6-2.7-6-6s2.7-6 6-6 6 2.7 6 6-2.7 6-6 6z"></path></svg>
-    </div>
-    <div class="global-language" onclick="toggleLanguageDropdown()">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"><path d="M12 4v16M4 12h16"></path></svg>
-      <span>EN</span>
-    </div>
-  </div>
+/* Logo styles */
+#logo {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  font-size: 28px;
+  color: #fff;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
 
-  <!-- Language Dropdown -->
-  <div class="language-dropdown" id="language-dropdown">
-    <div class="language-option" onclick="changeLanguage('en')">English</div>
-    <div class="language-option" onclick="changeLanguage('es')">Español</div>
-  </div>
-
-  <!-- Modal for bookmarks -->
-  <div id="bookmark-modal" class="modal">
-    <div class="modal-content">
-      <span class="modal-close" onclick="closeModal()">&times;</span>
-      <input id="bookmark-search" type="text" placeholder="Search bookmarks...">
-      <div id="bookmark-list"></div>
-    </div>
-  </div>
-
-  <!-- JavaScript files -->
-  <script src="script.js"></script>
-</body>
-</html>
+#logo svg {
+  margin-right: 10px;
+}
