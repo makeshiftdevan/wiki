@@ -380,29 +380,21 @@ function toggleBookmark(article, bookmarkIcon) {
  * ARTICLE SECTION CREATION *
  ***************************/
 function createArticleSection(article) {
-  // Check for necessary properties and filter content related to mechanics
   if (!article.title || !article.extract || !article.title.toLowerCase().includes("mechanics") && 
       !article.extract.toLowerCase().includes("mechanics") &&
       !(article.description && article.description.toLowerCase().includes("mechanics"))) {
     return null;
   }
 
-
-  // Create the section element
   const section = document.createElement('section');
   section.classList.add('article');
-
-  // Set the background image of the section
   section.style.backgroundImage = `url(${article.thumbnail.source})`;
 
-  // Create the dimmer and overlay elements
   const dimmer = document.createElement('div');
   dimmer.classList.add('dimmer');
-  
   const overlay = document.createElement('div');
   overlay.classList.add('overlay');
-  
-  // Add the article's description if it exists
+
   if (article.description) {
     const categoryEl = document.createElement('div');
     categoryEl.classList.add('article-category');
@@ -410,35 +402,31 @@ function createArticleSection(article) {
     overlay.appendChild(categoryEl);
   }
 
-  // Create and add the article title (with larger font size and a link)
   const title = document.createElement('a');
   title.textContent = article.title || 'No Title';
   title.classList.add('article-title');
-  title.href = article.fullurl || (article.content_urls && article.content_urls.desktop && article.content_urls.desktop.page);
+  title.href = article.fullurl || article.content_urls?.desktop?.page || '#';
   title.target = '_blank';
   overlay.appendChild(title);
 
-  // Shorten the article extract (summary) to 100 characters max
   const summary = document.createElement('p');
   summary.textContent = article.extract ? article.extract.slice(0, 100) + "..." : 'No summary available.';
   summary.classList.add('article-extract');
   overlay.appendChild(summary);
 
-  // Add a "Read more" link if there is a valid URL
-  if (article.fullurl || (article.content_urls && article.content_urls.desktop && article.content_urls.desktop.page)) {
+  if (article.fullurl || article.content_urls?.desktop?.page) {
     const link = document.createElement('a');
-    link.href = article.fullurl || (article.content_urls && article.content_urls.desktop && article.content_urls.desktop.page);
+    link.href = article.fullurl || article.content_urls.desktop.page;
     link.target = '_blank';
     link.textContent = 'Read more on Wikipedia';
     overlay.appendChild(link);
   }
 
-  // Append the dimmer and overlay to the section
   section.appendChild(dimmer);
   section.appendChild(overlay);
-
   return section;
 }
+
 
   const iconContainer = document.createElement('div');
   iconContainer.classList.add('icon-container');
