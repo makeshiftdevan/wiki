@@ -284,7 +284,7 @@ function getRandomKeyword() {
 const articleCache = [];
 let isPreloading = false;
 const CACHE_THRESHOLD = 10;
-const BULK_FETCH_COUNT = 50;  // Number of articles to fetch at a time
+const BULK_FETCH_COUNT = 20;  // Number of articles to fetch at a time
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
