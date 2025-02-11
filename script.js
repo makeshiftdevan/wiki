@@ -292,7 +292,7 @@ async function preloadArticles() {
   if (isPreloading) return;
   isPreloading = true;
   const searchTerm = getRandomKeyword(); // Use a random keyword
-  const url = `https://wikipedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=${encodeURIComponent(searchTerm)}&gsrlimit=${BULK_FETCH_COUNT}&prop=extracts|pageimages|info&inprop=url&exintro=1&explaintext=1&piprop=thumbnail&pithumbsize=400&origin=*`;
+  const url = `https://en.wikipedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=${encodeURIComponent(searchTerm)}&gsrlimit=${BULK_FETCH_COUNT}&prop=extracts|pageimages|info&inprop=url&exintro=1&explaintext=1&piprop=thumbnail&pithumbsize=400&origin=*`;
   try {
     const response = await fetch(url);
     const json = await response.json();
@@ -311,7 +311,7 @@ async function preloadArticles() {
 
 // Fetch a specific article by its pageid
 async function fetchArticleById(pageId) {
-  const url = `https://wikipedia.org/w/api.php?action=query&format=json&pageids=${pageId}&prop=extracts|pageimages|info&inprop=url&exintro=1&explaintext=1&piprop=thumbnail&pithumbsize=400&origin=*`;
+  const url = `https://en.wikipedia.org/w/api.php?action=query&format=json&pageids=${pageId}&prop=extracts|pageimages|info&inprop=url&exintro=1&explaintext=1&piprop=thumbnail&pithumbsize=400&origin=*`;
   try {
     const response = await fetch(url);
     const json = await response.json();
