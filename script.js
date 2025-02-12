@@ -428,7 +428,7 @@ function createArticleSection(article) {
   overlay.appendChild(title);
   
   const summary = document.createElement('p');
-  const maxSummaryLength = 200;
+  const maxSummaryLength = 1000;
   summary.textContent = article.extract ? article.extract.slice(0, maxSummaryLength) + "..." : 'No summary available.';
   summary.classList.add('article-extract');
   overlay.appendChild(summary);
