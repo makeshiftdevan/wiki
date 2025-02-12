@@ -7,8 +7,7 @@ globalBookmarkClone.setAttribute("width", "24");
 globalBookmarkClone.setAttribute("height", "24");
 globalBookmarkElement.appendChild(globalBookmarkClone);
 
-const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-const targetUrl = 'https://en.wikipedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=bulk%20modulus&gsrlimit=100&prop=extracts|pageimages|info&inprop=url&exintro=1&explaintext=1&piprop=thumbnail&pithumbsize=400&origin=*';
+
 
 fetch(proxyUrl + targetUrl)
   .then(response => response.json())
