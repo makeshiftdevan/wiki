@@ -547,7 +547,7 @@ async function addArticle() {
   if (articleCache.length <= CACHE_THRESHOLD) {
     await preloadArticles(); // Use await to ensure preloading happens before continuing
   }
-}
+
 
   
 
