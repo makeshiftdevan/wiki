@@ -7,7 +7,10 @@ globalBookmarkClone.setAttribute("width", "24");
 globalBookmarkClone.setAttribute("height", "24");
 globalBookmarkElement.appendChild(globalBookmarkClone);
 
-
+// Testing fetch with a proxy (for debugging CORS issues)
+// Comment out in production if needed.
+const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+const targetUrl = 'https://en.wikipedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=bulk%20modulus&gsrlimit=100&prop=extracts|pageimages|info&inprop=url&exintro=1&explaintext=1&piprop=thumbnail&pithumbsize=400&origin=*';
 
 fetch(proxyUrl + targetUrl)
   .then(response => response.json())
@@ -15,6 +18,9 @@ fetch(proxyUrl + targetUrl)
   .catch(error => console.error('Error fetching data:', error));
 
 
+/********************
+ * KEYWORDS & UTILS *
+ ********************/
 const mechanicsKeywords = [
   "mechanics",
   "classical mechanics",
@@ -273,6 +279,7 @@ const mechanicsKeywords = [
   "radial force in planetary systems",
   "centripetal force in non-uniform circular motion"
 ];
+
 function getRandomKeyword() {
   return mechanicsKeywords[Math.floor(Math.random() * mechanicsKeywords.length)];
 }
@@ -308,7 +315,6 @@ async function preloadArticles() {
       validArticles.forEach(article => articleCache.push(article));
       // Shuffle the pool for randomness
       shuffleArray(articleCache);
-      
     }
   } catch (error) {
     console.error("Error fetching mechanics articles:", error);
@@ -381,17 +387,17 @@ function toggleBookmark(article, bookmarkIcon) {
  * ARTICLE SECTION CREATION *
  ***************************/
 function createArticleSection(article) {
-if (
-  !article.title ||
-  !article.extract ||
-  (
-    !article.title.toLowerCase().includes("mechanics") &&
-    !article.extract.toLowerCase().includes("mechanics") &&
-    !(article.description && article.description.toLowerCase().includes("mechanics"))
-  )
-) {
-  return null;
-}
+  if (
+    !article.title ||
+    !article.extract ||
+    (
+      !article.title.toLowerCase().includes("mechanics") &&
+      !article.extract.toLowerCase().includes("mechanics") &&
+      !(article.description && article.description.toLowerCase().includes("mechanics"))
+    )
+  ) {
+    return null;
+  }
   
   const section = document.createElement('section');
   section.classList.add('article');
@@ -418,7 +424,8 @@ if (
   overlay.appendChild(title);
   
   const summary = document.createElement('p');
-  summary.textContent = article.extract;
+  const maxSummaryLength = 200;
+  summary.textContent = article.extract ? article.extract.slice(0, maxSummaryLength) + "..." : 'No summary available.';
   summary.classList.add('article-extract');
   overlay.appendChild(summary);
   
@@ -496,8 +503,6 @@ if (
   
   return section;
 }
-
-
 
 /***************************
  * SCROLL & OBSERVER *
