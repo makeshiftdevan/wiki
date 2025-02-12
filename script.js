@@ -313,8 +313,7 @@ async function preloadArticles() {
       const articles = Object.values(json.query.pages);
       const validArticles = articles.filter(article => article.thumbnail && article.thumbnail.source);
       validArticles.forEach(article => articleCache.push(article));
-      // Shuffle the pool for randomness
-      shuffleArray(articleCache);
+      shuffleArray(articleCache); // Shuffle the articles for randomness
     }
   } catch (error) {
     console.error("Error fetching mechanics articles:", error);
@@ -512,15 +511,25 @@ const observerOptions = {
   root: container,
   threshold: 0.5
 };
+const container = document.getElementById('container');
+
+// Create a function to detect when an article is in view.
+const observerOptions = {
+  root: container,
+  threshold: 0.5
+};
 
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
+      // When the last article enters the viewport, load more articles.
       observer.unobserve(entry.target);
       addArticle();
     }
   });
 }, observerOptions);
+
+// Observe the first article initially
 
 async function addArticle() {
   console.log("Adding article...");
@@ -536,10 +545,20 @@ async function addArticle() {
     observer.observe(section); // Reobserve the newly added section
   }
   
+  // Hide loader after article is added
+  document.getElementById('loader').style.display = 'none'; 
+  
   if (articleCache.length <= CACHE_THRESHOLD) {
     preloadArticles(); // Preload articles when the cache is low
   }
 }
+  
+  // If the cache is low, preload more articles
+  if (articleCache.length <= CACHE_THRESHOLD) {
+    preloadArticles();
+  }
+}
+
 
 
 // Handle URL path for specific article pageid
@@ -612,4 +631,11 @@ bookmarkSearch.addEventListener('input', () => {
     const title = item.querySelector('a').textContent.toLowerCase();
     item.style.display = title.includes(searchTerm) ? 'block' : 'none';
   });
+
+
+// Call the function to load initial articles
+preloadArticles().then(() => {
+  addArticle(); // Add the first article
+  addArticle(); // Add another article to show right away
+  document.getElementById('loader').style.display = 'none'; // Hide loader
 });
