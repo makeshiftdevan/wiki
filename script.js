@@ -6,6 +6,11 @@ const globalBookmarkClone = document.getElementById("bookmark-icon-template").co
 globalBookmarkClone.setAttribute("width", "24");
 globalBookmarkClone.setAttribute("height", "24");
 globalBookmarkElement.appendChild(globalBookmarkClone);
+const globalBookmark = document.getElementById('global-bookmark');
+const bookmarkModal = document.getElementById('bookmark-modal');
+const bookmarkList = document.getElementById('bookmark-list');
+const modalClose = document.getElementById('modal-close');
+const bookmarkSearch = document.getElementById('bookmark-search');
 
 // Testing fetch with a proxy (for debugging CORS issues)
 // Comment out in production if needed.
