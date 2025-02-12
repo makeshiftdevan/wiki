@@ -552,7 +552,7 @@ async function addArticle() {
 
 
 
-// Handle URL path for specific article pageid
+//// Handle URL path for specific article pageid
 const path = window.location.pathname.replace(/\//g, "");
 if (path && !isNaN(path)) {
   fetchArticleById(path).then(article => {
@@ -574,15 +574,7 @@ if (path && !isNaN(path)) {
   });
 }
 
-/***************************
- * BOOKMARK MODAL HANDLING *
- ***************************/
-const globalBookmark = document.getElementById('global-bookmark');
-const bookmarkModal = document.getElementById('bookmark-modal');
-const modalClose = document.querySelector('.modal-close');
-const bookmarkList = document.getElementById('bookmark-list');
-const bookmarkSearch = document.getElementById('bookmark-search');
-
+// Handle bookmark modal and search interactions
 globalBookmark.addEventListener('click', () => {
   bookmarkModal.style.display = 'block';
   const storedBookmarks = JSON.parse(localStorage.getItem("bookmarkedArticles") || "[]");
@@ -618,7 +610,7 @@ bookmarkSearch.addEventListener('input', () => {
     const title = item.querySelector('a').textContent.toLowerCase();
     item.style.display = title.includes(searchTerm) ? 'block' : 'none';
   });
-
+});
 
 // Call the function to load initial articles
 preloadArticles().then(() => {
