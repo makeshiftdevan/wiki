@@ -9,13 +9,13 @@ globalBookmarkElement.appendChild(globalBookmarkClone);
 
 // Testing fetch with a proxy (for debugging CORS issues)
 // Comment out in production if needed.
-const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-const targetUrl = 'https://en.wikipedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=bulk%20modulus&gsrlimit=100&prop=extracts|pageimages|info&inprop=url&exintro=1&explaintext=1&piprop=thumbnail&pithumbsize=400&origin=*';
+//const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+//const targetUrl = 'https://en.wikipedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=bulk%20modulus&gsrlimit=100&prop=extracts|pageimages|info&inprop=url&exintro=1&explaintext=1&piprop=thumbnail&pithumbsize=400&origin=*';
 
-fetch(proxyUrl + targetUrl)
-  .then(response => response.json())
-  .then(data => console.log(data))
-  .catch(error => console.error('Error fetching data:', error));
+//fetch(proxyUrl + targetUrl)
+//  .then(response => response.json())
+//  .then(data => console.log(data))
+  //.catch(error => console.error('Error fetching data:', error));
 
 
 /********************
