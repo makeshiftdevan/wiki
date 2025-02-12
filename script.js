@@ -382,12 +382,17 @@ function toggleBookmark(article, bookmarkIcon) {
  * ARTICLE SECTION CREATION *
  ***************************/
 function createArticleSection(article) {
-  if (!article.title || !article.extract || 
-      !article.title.toLowerCase().includes("mechanics") && 
-      !article.extract.toLowerCase().includes("mechanics") &&
-      !(article.description && article.description.toLowerCase().includes("mechanics"))) {
-    return null;
-  }
+if (
+  !article.title ||
+  !article.extract ||
+  (
+    !article.title.toLowerCase().includes("mechanics") &&
+    !article.extract.toLowerCase().includes("mechanics") &&
+    !(article.description && article.description.toLowerCase().includes("mechanics"))
+  )
+) {
+  return null;
+}
   
   const section = document.createElement('section');
   section.classList.add('article');
