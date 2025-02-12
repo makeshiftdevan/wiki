@@ -604,9 +604,9 @@ globalBookmark.addEventListener('click', () => {
   });
 });
 
-modalClose.addEventListener('click', () => {
-  bookmarkModal.style.display = 'none';
-});
+//modalClose.addEventListener('click', () => {
+ // bookmarkModal.style.display = 'none';
+//});
 
 bookmarkSearch.addEventListener('input', () => {
   const searchTerm = bookmarkSearch.value.toLowerCase();
