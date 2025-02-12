@@ -61,6 +61,14 @@ h2 {
   -ms-overflow-style: none;     /* IE 10+ */
 }
 
+.article-extract {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;  /* Display up to 5 lines */
+  -webkit-box-orient: vertical;
+}
+
+
 #container::-webkit-scrollbar {
   display: none;  /* Chrome, Safari, Opera */
 }
