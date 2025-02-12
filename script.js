@@ -526,42 +526,29 @@ const observer = new IntersectionObserver((entries) => {
 }, observerOptions);
 
 // Observe the first article initially
-
 async function addArticle() {
   console.log("Adding article...");
+  
   if (articleCache.length === 0) {
     await preloadArticles(); // Wait for articles to load
   }
+  
   const articleData = articleCache.shift();
   if (!articleData) return;
 
-  const section = createArticleSection(articleData); 
+  const section = createArticleSection(articleData);
   if (section) {
     container.appendChild(section);
     observer.observe(section); // Reobserve the newly added section
   }
 
- 
-
   // Preload more if cache is low
   if (articleCache.length <= CACHE_THRESHOLD) {
-    await preloadArticles(); // Use await to ensure preloading happens before continuing
-  }
-
-
-  
-
-  
-  if (articleCache.length <= CACHE_THRESHOLD) {
-    preloadArticles(); // Preload articles when the cache is low
-  }
-
-  
-  // If the cache is low, preload more articles
-  if (articleCache.length <= CACHE_THRESHOLD) {
-    preloadArticles();
+    await preloadArticles(); // Ensure preloading happens before continuing
   }
 }
+
+
 
 
 
