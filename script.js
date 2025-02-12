@@ -283,7 +283,7 @@ function getRandomKeyword() {
  ********************/
 const articleCache = [];
 let isPreloading = false;
-const CACHE_THRESHOLD = 10;
+const CACHE_THRESHOLD = 20;
 const BULK_FETCH_COUNT = 20;  // Number of articles to fetch at a time
 
 function shuffleArray(array) {
@@ -419,7 +419,7 @@ if (
   overlay.appendChild(title);
   
   const summary = document.createElement('p');
-  summary.textContent = article.extract ? article.extract.slice(0, 100) + "..." : 'No summary available.';
+  summary.textContent = article.extract ? article.extract.slice(0, 400) + "..." : 'No summary available.';
   summary.classList.add('article-extract');
   overlay.appendChild(summary);
   
