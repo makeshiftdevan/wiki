@@ -382,40 +382,42 @@ function toggleBookmark(article, bookmarkIcon) {
  * ARTICLE SECTION CREATION *
  ***************************/
 function createArticleSection(article) {
-  if (!article.title || !article.extract || !article.title.toLowerCase().includes("mechanics") && 
+  if (!article.title || !article.extract || 
+      !article.title.toLowerCase().includes("mechanics") && 
       !article.extract.toLowerCase().includes("mechanics") &&
       !(article.description && article.description.toLowerCase().includes("mechanics"))) {
     return null;
   }
-
+  
   const section = document.createElement('section');
   section.classList.add('article');
   section.style.backgroundImage = `url(${article.thumbnail.source})`;
-
+  
   const dimmer = document.createElement('div');
   dimmer.classList.add('dimmer');
+  
   const overlay = document.createElement('div');
   overlay.classList.add('overlay');
-
+  
   if (article.description) {
     const categoryEl = document.createElement('div');
     categoryEl.classList.add('article-category');
     categoryEl.textContent = article.description;
     overlay.appendChild(categoryEl);
   }
-
+  
   const title = document.createElement('a');
   title.textContent = article.title || 'No Title';
   title.classList.add('article-title');
   title.href = article.fullurl || article.content_urls?.desktop?.page || '#';
   title.target = '_blank';
   overlay.appendChild(title);
-
+  
   const summary = document.createElement('p');
   summary.textContent = article.extract ? article.extract.slice(0, 100) + "..." : 'No summary available.';
   summary.classList.add('article-extract');
   overlay.appendChild(summary);
-
+  
   if (article.fullurl || article.content_urls?.desktop?.page) {
     const link = document.createElement('a');
     link.href = article.fullurl || article.content_urls.desktop.page;
@@ -423,8 +425,8 @@ function createArticleSection(article) {
     link.textContent = 'Read more on Wikipedia';
     overlay.appendChild(link);
   }
-
-  // The following block is moved inside the function.
+  
+  // Icon container and bookmark/share icons added inside the function:
   const iconContainer = document.createElement('div');
   iconContainer.classList.add('icon-container');
   
@@ -487,8 +489,8 @@ function createArticleSection(article) {
   overlay.appendChild(iconContainer);
   section.appendChild(dimmer);
   section.appendChild(overlay);
-
-  return section; // This return is inside the function now.
+  
+  return section;
 }
 
 
