@@ -419,7 +419,7 @@ if (
   overlay.appendChild(title);
   
   const summary = document.createElement('p');
-  summary.textContent = article.extract ? article.extract.slice(0, 400) + "..." : 'No summary available.';
+  summary.textContent = article.extract;
   summary.classList.add('article-extract');
   overlay.appendChild(summary);
   
