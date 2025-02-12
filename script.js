@@ -506,11 +506,7 @@ function createArticleSection(article) {
 /***************************
  * SCROLL & OBSERVER *
  ***************************/
-const container = document.getElementById('container');
-const observerOptions = {
-  root: container,
-  threshold: 0.5
-};
+
 const container = document.getElementById('container');
 
 // Create a function to detect when an article is in view.
@@ -534,24 +530,32 @@ const observer = new IntersectionObserver((entries) => {
 async function addArticle() {
   console.log("Adding article...");
   if (articleCache.length === 0) {
-    await preloadArticles(); // Preload if the cache is empty
+    await preloadArticles(); // Wait for articles to load
   }
   const articleData = articleCache.shift();
   if (!articleData) return;
-  
+
   const section = createArticleSection(articleData); 
   if (section) {
     container.appendChild(section);
     observer.observe(section); // Reobserve the newly added section
   }
+
+ 
+
+  // Preload more if cache is low
+  if (articleCache.length <= CACHE_THRESHOLD) {
+    await preloadArticles(); // Use await to ensure preloading happens before continuing
+  }
+}
+
   
-  // Hide loader after article is added
-  document.getElementById('loader').style.display = 'none'; 
+
   
   if (articleCache.length <= CACHE_THRESHOLD) {
     preloadArticles(); // Preload articles when the cache is low
   }
-}
+
   
   // If the cache is low, preload more articles
   if (articleCache.length <= CACHE_THRESHOLD) {
@@ -576,14 +580,10 @@ if (path && !isNaN(path)) {
       window.history.replaceState(null, "", "/");
     }
     addArticle();
-    addArticle();
-    document.getElementById('loader').style.display = 'none';
   });
 } else {
   preloadArticles().then(() => {
     addArticle();
-    addArticle();
-    document.getElementById('loader').style.display = 'none';
   });
 }
 
